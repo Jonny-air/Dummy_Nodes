@@ -1,0 +1,23 @@
+<launch>
+  <arg name="verbose" default="true"/>
+
+  <!--params for publishing dummy setpoints:-->
+  <arg name="publish_dummy_pos" default="true" />
+
+  <group if="$(arg publish_dummy_pos)">
+    <node pkg="believer_dummy_nodes" type="dummy_offb_node" name="dummy_offb_node">
+      <param name="use_local" value="true"/>
+      <!-- <param name="local_x" value="723029.0"/>
+      <param name="local_y" value="5282567.0"/>
+      <param name="local_z" value="-501.0"/> -->
+       <!-- <param name="gcs_url" value="udp://127.0.0.1:14555@127.0.0.1:14550"/> -->
+       <!-- <param name="gcs_url" value="$(arg gcs_url)"/>
+       <param name="fcu_url" value="$(arg fcu_url)" />
+       <param name="fcu_protocol" value="$(arg fcu_protocol)" />
+       <param name="capability_group" value="$(arg capability_group)" />
+       <param name="target_system_id" value="$(arg tgt_system)" />
+       <param name="target_component_id" value="$(arg tgt_component)" /> -->
+    </node>
+  </group>
+
+</launch>
