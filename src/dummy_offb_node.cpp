@@ -54,7 +54,6 @@ int main(int argc, char **argv)
 
     //
 
-    bool use_local = nh.param<bool>("dummy_offb_node/use_local", use_local, true); //defaults to true atm... i don't know why
     bool add_noise = false;
 
     ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
@@ -66,14 +65,6 @@ int main(int argc, char **argv)
     ros::Publisher local_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
           ("mavros/setpoint_position/local", 10);
 
-    ros::Publisher global_pos_pub = nh.advertise<geographic_msgs::GeoPoseStamped>
-          ("mavros/setpoint_position/global_to_local", 10);
-    //
-    // ros::Publisher set_gp_origin_pub = nh.advertise<geographic_msgs::GeoPointStamped>
-    //       ("mavros/global_position/set_gp_origin", 10);
-
-    // ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>
-    //         ("mavros/cmd/arming");
     ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
           ("mavros/set_mode");
 
@@ -86,36 +77,23 @@ int main(int argc, char **argv)
         rate.sleep();
     }
 
-    //local origin
-    // geographic_msgs::GeoPointStamped geo_origin;
-    // geo_origin.position.latitude = 47.3666999;
-    // geo_origin.position.longitude = 8.5501323;
-    // geo_origin.position.altitude = 500;
-
     //Waypoint
-      mavros_msgs::Waypoint wp_msg;
+    mavros_msgs::Waypoint wp_msg;
 
-      wp_msg.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
-      wp_msg.command = 17;
-      wp_msg.is_current = true;
-      wp_msg.autocontinue = true;
-      wp_msg.param1 = 0;
-      wp_msg.param2 = 0;
-      wp_msg.param3 = 0;
-      wp_msg.param4 = 0;
-      wp_msg.x_lat = 0;
-      wp_msg.y_long = -0.00329 ;
-      wp_msg.z_alt = 40.0;
-
-
-
+    wp_msg.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
+    wp_msg.command = 17;
+    wp_msg.is_current = true;
+    wp_msg.autocontinue = true;
+    wp_msg.param1 = 0;
+    wp_msg.param2 = 0;
+    wp_msg.param3 = 0;
+    wp_msg.param4 = 0;
+    wp_msg.x_lat = 0;
+    wp_msg.y_long = -0.00329 ;
+    wp_msg.z_alt = 40.0;
 
     geometry_msgs::PoseStamped target_pose; //gets transformed to localPosition frame x--y flipped and z = -z
     geometry_msgs::PoseStamped true_pose;
-
-    // target_pose.pose.position.x = 0.06832313538; //(y)
-    // target_pose.pose.position.y = 0.41192400455; //(x)
-    // target_pose.pose.position.z = 2.0; //(-z) for not state level
 
     target_pose.pose.position.x = 1000; //(y)
     target_pose.pose.position.y = 2000; //(x)
@@ -123,25 +101,13 @@ int main(int argc, char **argv)
 
     true_pose = target_pose;
 
-    // pose.pose.position.x = 0;
-    // pose.pose.position.y = 0;
-    // pose.pose.position.z = -1;
+    mavros_msgs::SetMode offb_set_mode;
+    offb_set_mode.request.custom_mode = "OFFBOARD";
 
-
-    geographic_msgs::GeoPoseStamped geopose;
-    geopose.pose.position.latitude = 47.3666999;
-    geopose.pose.position.longitude = 8.5501323;
-    geopose.pose.position.altitude = 500.2;
+    mavros_msgs::SetMode auto_set_mode;
+    auto_set_mode.request.custom_mode = "AUTO.MISSION";
 
     srand48(time(NULL));
-
-    //set desired origin for local frame
-    // for(int i = 1; ros::ok() && i > 0; --i){
-    //     set_gp_origin_pub.publish(geo_origin);
-    //
-    //     ros::spinOnce();
-    //     rate.sleep();
-    // }
 
     //send a few setpoints before starting
     for(int i = 10; ros::ok() && i > 0; --i){
@@ -155,14 +121,6 @@ int main(int argc, char **argv)
         rate.sleep();
     }
 
-    mavros_msgs::SetMode offb_set_mode;
-    offb_set_mode.request.custom_mode = "OFFBOARD";
-
-    mavros_msgs::SetMode auto_set_mode;
-    auto_set_mode.request.custom_mode = "AUTO.MISSION";
-    //
-    // mavros_msgs::CommandBool arm_cmd;
-    // arm_cmd.request.value = true;
 
     ros::Time last_request = ros::Time::now();
     ros::Time t_started_climbout = ros::Time::now();
@@ -231,7 +189,7 @@ int main(int argc, char **argv)
               ROS_ERROR("AUTO.MISSION enabled");
               _is_climbout = false; //don't call this function anymore
               t_started_climbout = ros::Time::now();
-              // ros::shutdown();
+              // ros::shutdown(); //optionally shut this node down
               // return 0;
             }
           }
@@ -285,12 +243,7 @@ int main(int argc, char **argv)
         target_pose.pose.position.y -= 0.01*dy; //(x)
         target_pose.pose.position.z -= 0.01*dz;
 
-
-        if (use_local) {
-          local_pos_pub.publish(target_pose);
-        } else {
-          global_pos_pub.publish(geopose);
-        }
+        local_pos_pub.publish(target_pose);
 
         ros::spinOnce();
         rate.sleep();
