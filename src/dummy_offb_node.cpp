@@ -111,12 +111,7 @@ int main(int argc, char **argv)
 
     //send a few setpoints before starting
     for(int i = 10; ros::ok() && i > 0; --i){
-        if (use_local) {
-          local_pos_pub.publish(target_pose);
-        } else {
-          global_pos_pub.publish(geopose);
-        }
-
+        local_pos_pub.publish(target_pose);
         ros::spinOnce();
         rate.sleep();
     }
