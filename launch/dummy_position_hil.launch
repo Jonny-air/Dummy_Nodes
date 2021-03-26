@@ -5,7 +5,7 @@
   <arg name="publish_dummy_pos" default="true" />
 
   <group if="$(arg publish_dummy_pos)">
-    <node pkg="believer_dummy_nodes" type="dummy_offb_node" name="dummy_offb_node">
+    <node pkg="believer_dummy_nodes" type="dummy_offb_node_attitude" name="dummy_offb_node_attitude">
       <param name="use_local" value="true"/>
       <!-- <param name="local_x" value="723029.0"/>
       <param name="local_y" value="5282567.0"/>

@@ -29,3 +29,13 @@ install(TARGETS dummy_offb_node
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+add_executable(dummy_offb_node_attitude src/dummy_offb_node_attitude.cpp)
+target_link_libraries(dummy_offb_node_attitude ${catkin_LIBRARIES})
+add_dependencies(dummy_offb_node_attitude ${catkin_EXPORTED_TARGETS})
+
+install(TARGETS dummy_offb_node_attitude
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
