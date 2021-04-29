@@ -12,14 +12,17 @@
   <build_depend>geometry_msgs</build_depend>
   <build_depend>geographic_msgs</build_depend>
   <build_depend>mavros_msgs</build_depend>
+  <build_depend>mav_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>geographic_msgs</build_export_depend>
   <build_export_depend>mavros_msgs</build_export_depend>
+  <build_export_depend>mav_msgs</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>geographic_msgs</exec_depend>
   <exec_depend>mavros_msgs</exec_depend>
+  <exec_depend>mav_msgs</exec_depend>
   <exec_depend>roscpp</exec_depend>
 
 

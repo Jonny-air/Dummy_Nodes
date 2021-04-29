@@ -6,6 +6,7 @@ add_definitions(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   geographic_msgs
+  mav_msgs
   mavros_msgs
   roscpp
 )
@@ -15,6 +16,7 @@ catkin_package(
     geometry_msgs
     geographic_msgs
     mavros_msgs
+    mav_msgs
     roscpp
 )
 
@@ -35,6 +37,16 @@ target_link_libraries(dummy_offb_node_attitude ${catkin_LIBRARIES})
 add_dependencies(dummy_offb_node_attitude ${catkin_EXPORTED_TARGETS})
 
 install(TARGETS dummy_offb_node_attitude
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+add_executable(dummy_offb_node_mav src/dummy_offb_node_mav.cpp)
+target_link_libraries(dummy_offb_node_mav ${catkin_LIBRARIES})
+add_dependencies(dummy_offb_node_mav ${catkin_EXPORTED_TARGETS})
+
+install(TARGETS dummy_offb_node_mav
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
